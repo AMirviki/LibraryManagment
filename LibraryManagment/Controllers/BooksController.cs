@@ -58,7 +58,7 @@ namespace LibraryManagment.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Author,Genre,PublishDate,Copies")] Book book)
+        public async Task<IActionResult> Create([Bind("ID,Title,Author,Genre,PublishDate,Copies,ImagePath")] Book book)
         {
             if (ModelState.IsValid)
             {

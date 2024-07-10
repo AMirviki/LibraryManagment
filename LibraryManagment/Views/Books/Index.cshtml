@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LibraryManagment.Models.Book>
 
 @{
-    Layout = null;
+    Layout = "~/views/shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -21,6 +21,7 @@
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
+                    <th>Image</th>
                     <th>
                         @Html.DisplayNameFor(model => model.Title)
                     </th>
@@ -36,16 +37,24 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Copies)
                     </th>
+                    
                     <th>Actions</th>
                 </tr>
             </thead>
-            <style>
-
-            </style>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="~/images/@item.ImagePath" alt="Book Image" width="100" height="100" />
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
@@ -72,7 +81,6 @@
         </table>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

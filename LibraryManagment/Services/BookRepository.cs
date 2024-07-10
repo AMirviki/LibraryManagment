@@ -4,6 +4,7 @@ using LibraryManagment.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace LibraryManagment.Services
 {
@@ -11,19 +12,37 @@ namespace LibraryManagment.Services
     {
         // Only Readable Database 
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
         #region CTOR
         // CTOR Db_Context to accesse my Database Record
-        public BookRepository(ApplicationDbContext dbContext)
+        public BookRepository(ApplicationDbContext dbContext, IWebHostEnvironment environment)
         {
             _context = dbContext;
+            _environment = environment;
+
         }
         #endregion
 
         #region AddMethod
+      
         public async Task AddBookAysnc(Book book)
         {
-            await _context.Books.AddAsync(book);
+            if (book.ImageFile != null)
+            {
+                string wwwRootPath = _environment.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(book.ImageFile.FileName);
+                string extension = Path.GetExtension(book.ImageFile.FileName);
+                book.ImagePath = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "/ImgUpload/", book.ImagePath);
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await book.ImageFile.CopyToAsync(fileStream);
+                }
+            }
+
+            _context.Books.Add(book);
             await _context.SaveChangesAsync();
         }
         #endregion

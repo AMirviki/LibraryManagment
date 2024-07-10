@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LibraryManagment.Models.Loan>
 
 @{
-    Layout = null;
+    Layout = "~/views/shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -30,6 +30,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
+            
             <th></th>
         </tr>
     </thead>
