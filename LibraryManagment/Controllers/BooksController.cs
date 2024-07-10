@@ -58,16 +58,17 @@ namespace LibraryManagment.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Author,Genre,PublishDate,Copies,ImagePath")] Book book)
+        public async Task<IActionResult> Create([Bind("ID,Title,Author,Genre,PublishDate,Copies,ImageFile")] Book book)
         {
             if (ModelState.IsValid)
             {
                 await _bookrepository.AddBookAysnc(book);
-
                 return RedirectToAction(nameof(Index));
             }
+
             return View(book);
         }
+
 
         // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)

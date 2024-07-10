@@ -25,25 +25,26 @@ namespace LibraryManagment.Services
         #endregion
 
         #region AddMethod
-      
+
         public async Task AddBookAysnc(Book book)
         {
-            if (book.ImageFile != null)
+            if (book.ImageFile != null && book.ImageFile.Length > 0)
             {
-                string wwwRootPath = _environment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(book.ImageFile.FileName);
-                string extension = Path.GetExtension(book.ImageFile.FileName);
-                book.ImagePath = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                string path = Path.Combine(wwwRootPath + "/ImgUpload/", book.ImagePath);
+                string uploadsFolder = Path.Combine(_environment.WebRootPath, "ImgUpload");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(book.ImageFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                using (var fileStream = new FileStream(path, FileMode.Create))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await book.ImageFile.CopyToAsync(fileStream);
                 }
+
+                book.ImagePath = uniqueFileName; // Save the file name to the database
             }
 
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
+
         }
         #endregion
 
