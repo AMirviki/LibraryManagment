@@ -2,7 +2,7 @@
 
 @{
     Layout = "~/views/shared/_Layout.cshtml";
-    string imagePatch = Url.Content("~/ImgUpload/" + Model.UploadFile);
+    string imagePatch = Url.Content("~/ImgUpload/" + Model.ImagePath);
 }
 
 <!DOCTYPE html>
@@ -51,7 +51,8 @@
                     <input asp-for="UploadFile" type="file" class="form-control" />
                     <span asp-validation-for="UploadFile" class="text-danger"></span>
                 </div>
-
+                <br/>
+                 <img src="@imagePatch" asp-append-version="true" style="max-height: 290px; max-width: 440px;" class="card-img-top img-thumbnail">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
