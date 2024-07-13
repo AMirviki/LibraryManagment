@@ -1,6 +1,7 @@
 ﻿using LibraryManagment.Data;
 using LibraryManagment.Models;
 using LibraryManagment.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -28,24 +29,11 @@ namespace LibraryManagment.Services
 
         public async Task AddBookAysnc(Book book)
         {
-            if (book.ImageFile != null && book.ImageFile.Length > 0)
-            {
-                string uploadsFolder = Path.Combine(_environment.WebRootPath, "ImgUpload");
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(book.ImageFile.FileName);
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await book.ImageFile.CopyToAsync(fileStream);
-                }
-
-                book.ImagePath = uniqueFileName; // Save the file name to the database
-            }
-
+           
             _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
+                await _context.SaveChangesAsync();
         }
+
         #endregion
 
         #region DeleteMethod

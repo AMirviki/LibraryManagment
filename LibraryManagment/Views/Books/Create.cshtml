@@ -1,11 +1,10 @@
-﻿@model LibraryManagment.Models.Book
+﻿@model LibraryManagment.Models.BookViewModel
 
 @{
-    Layout = "~/views/shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -13,55 +12,62 @@
 </head>
 <body>
 
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-control" />
-                <span asp-validation-for="Genre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PublishDate" class="control-label"></label>
-                <input asp-for="PublishDate" class="form-control" />
-                <span asp-validation-for="PublishDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Copies" class="control-label"></label>
-                <input asp-for="Copies" class="form-control" />
-                <span asp-validation-for="Copies" class="text-danger"></span>
-            </div>
+    <h4>Book</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class="form-group">
-                    <label asp-for="ImageFile" class="control-label"></label>
-                    <input asp-for="ImageFile" type="file" class="form-control" />
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+                <div class="form-group">
+                    <label asp-for="Author" class="control-label"></label>
+                    <input asp-for="Author" class="form-control" />
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Genre" class="control-label"></label>
+                    <input asp-for="Genre" class="form-control" />
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PublishDate" class="control-label"></label>
+                    <input asp-for="PublishDate" type="date" class="form-control" />
+                    <span asp-validation-for="PublishDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Copies" class="control-label"></label>
+                    <input asp-for="Copies" class="form-control" />
+                    <span asp-validation-for="Copies" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="UploadFile" class="control-label"></label>
+                    <input asp-for="UploadFile" type="file" class="form-control" />
+                    <span asp-validation-for="UploadFile" class="text-danger"></span>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 </body>
 </html>

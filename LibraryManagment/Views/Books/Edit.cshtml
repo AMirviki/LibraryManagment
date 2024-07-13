@@ -1,7 +1,8 @@
-﻿@model LibraryManagment.Models.Book
+﻿@model LibraryManagment.Models.BookViewModel
 
 @{
     Layout = "~/views/shared/_Layout.cshtml";
+    string imagePatch = Url.Content("~/ImgUpload/" + Model.UploadFile);
 }
 
 <!DOCTYPE html>
@@ -9,7 +10,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
+    <title>ویرایش</title>
 </head>
 <body>
 
@@ -45,6 +46,12 @@
                 <input asp-for="Copies" class="form-control" />
                 <span asp-validation-for="Copies" class="text-danger"></span>
             </div>
+                <div class="form-group">
+                    <label asp-for="UploadFile" class="control-label"></label>
+                    <input asp-for="UploadFile" type="file" class="form-control" />
+                    <span asp-validation-for="UploadFile" class="text-danger"></span>
+                </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -53,7 +60,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">بازگشت به لیست</a>
 </div>
 
 @section Scripts {

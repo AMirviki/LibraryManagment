@@ -9,6 +9,7 @@ using LibraryManagment.Data;
 using LibraryManagment.Models;
 using LibraryManagment.Repositories;
 using LibraryManagment.Services;
+using Microsoft.Extensions.Hosting;
 
 namespace LibraryManagment.Controllers
 {
@@ -16,10 +17,11 @@ namespace LibraryManagment.Controllers
     public class BooksController : Controller
     {
         private readonly IBookRepository _bookrepository;
-
-        public BooksController(IBookRepository bookRepository)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public BooksController(IBookRepository bookRepository, IWebHostEnvironment webHostEnvironment)
         {
             _bookrepository = bookRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Books
@@ -58,16 +60,48 @@ namespace LibraryManagment.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Author,Genre,PublishDate,Copies,ImageFile")] Book book)
+        public async Task<IActionResult> Create(BookViewModel model)
         {
             if (ModelState.IsValid)
             {
-                await _bookrepository.AddBookAysnc(book);
-                return RedirectToAction(nameof(Index));
+                
+                string uniqueFileName = null;
+                if (model.UploadFile != null)
+                {
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.UploadFile.FileName;
+                    string targetPath = Path.Combine(_webHostEnvironment.WebRootPath, "ImgUpload", uniqueFileName);
+
+                    using (var stream = new FileStream(targetPath, FileMode.Create))
+                    {
+                        await model.UploadFile.CopyToAsync(stream);
+                    }
+                }
+
+                var book = new Book
+                {
+                    Title = model.Title,
+                    Author = model.Author,
+                    Genre = model.Genre,
+                    PublishDate = model.PublishDate,
+                    Copies = model.Copies,
+                    ImagePath = uniqueFileName
+                };
+
+                try
+                {
+                    await _bookrepository.AddBookAysnc(book);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                }
             }
 
-            return View(book);
+            return View(model);
         }
+
+
 
 
         // GET: Books/Edit/5
@@ -83,7 +117,18 @@ namespace LibraryManagment.Controllers
             {
                 return NotFound();
             }
-            return View(book);
+            BookViewModel bookView = new BookViewModel()
+            {
+                ID = id.Value,
+                Author = book.Author,
+                Genre = book.Genre,
+                PublishDate = book.PublishDate,
+                Copies = book.Copies,
+                Title = book.Title,
+                ImagePath = book.ImagePath
+            };
+
+            return View(bookView);
         }
 
         // POST: Books/Edit/5
